@@ -143,11 +143,46 @@ class FormatTest extends \PHPUnit\Framework\TestCase
         //Set Locale and attributes
         $this->container->setLocale('DE');
 
-        $this->container->setAttribute('LOCALITY', 'Oyenhausen');
+        $this->container->setAttribute('RECIPIENT', '');
+        $this->container->setAttribute('ORGANIZATION', '');
+        $this->container->setAttribute('STREET_ADDRESS', '');
+        $this->container->setAttribute('POSTAL_CODE', '');        
+        $this->container->setAttribute('LOCALITY', '');
+
+        $this->assertEquals(
+            $this->container->formatAddress(),
+            ""
+        );
+
         $this->container->setAttribute('RECIPIENT', 'Eberhard Wellhausen');
+
+        $this->assertEquals(
+            $this->container->formatAddress(),
+            "Eberhard Wellhausen"
+        );
+
         $this->container->setAttribute('ORGANIZATION', 'Wittekindshof');
-        $this->container->setAttribute('POSTAL_CODE', '32547');
+
+        $this->assertEquals(
+            $this->container->formatAddress(),
+            "Eberhard Wellhausen\nWittekindshof"
+        );
+
         $this->container->setAttribute('STREET_ADDRESS', 'Schulstrasse 4');
+
+        $this->assertEquals(
+            $this->container->formatAddress(),
+            "Eberhard Wellhausen\nWittekindshof\nSchulstrasse 4"
+        );
+
+        $this->container->setAttribute('POSTAL_CODE', '32547');
+
+        $this->assertEquals(
+            $this->container->formatAddress(),
+            "Eberhard Wellhausen\nWittekindshof\nSchulstrasse 4\n32547"
+        );
+
+        $this->container->setAttribute('LOCALITY', 'Oyenhausen');
 
         $this->assertEquals(
             $this->container->formatAddress(),
@@ -156,51 +191,62 @@ class FormatTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Check the format of a DE address is expected even when missing attributes
-     *
-     * @return void
-     */
-    public function testDeAddressFormatWithMissingAttributes()
-    {
-        //Clear any previously set attributes
-        $this->container->clearAttributes();
-
-        //Set Locale and attributes
-        $this->container->setLocale('DE');
-
-        $this->container->setAttribute('LOCALITY', 'Oyenhausen');
-        $this->container->setAttribute('RECIPIENT', '');
-        $this->container->setAttribute('ORGANIZATION', '');
-        $this->container->setAttribute('POSTAL_CODE', '32547');
-        $this->container->setAttribute('STREET_ADDRESS', 'Schulstrasse 4');
-
-        $this->assertEquals(
-            $this->container->formatAddress(),
-            "Schulstrasse 4\n32547 Oyenhausen"
-        );
-    }
-
-    /**
      * Ensure that addresses doesn't leave markers hanging
      *
      * @return void
      */
-    public function testSpanishAddressDoesntLeaveMarkersHanging()
+    public function testEsAddressFormat()
     {
         //Clear any previously set attributes
         $this->container->clearAttributes();
 
         //Set Locale and attributes
-        $this->container->setLocale('es');
+        $this->container->setLocale('ES');
 
-        $this->container->setAttribute('LOCALITY', 'Girona');
+        $this->container->setAttribute('RECIPIENT', '');
+        $this->container->setAttribute('ORGANIZATION', '');
+        $this->container->setAttribute('STREET_ADDRESS', '');
+        $this->container->setAttribute('POSTAL_CODE', '');        
+        $this->container->setAttribute('LOCALITY', '');
+
+        $this->assertEquals(
+            $this->container->formatAddress(),
+            ""
+        );
+
         $this->container->setAttribute('RECIPIENT', 'Jesper Jacobsen');
-        $this->container->setAttribute('POSTAL_CODE', '17001');
+
+        $this->assertEquals(
+            $this->container->formatAddress(),
+            "Jesper Jacobsen"
+        );
+
+        $this->container->setAttribute('ORGANIZATION', 'El Corte Inglés');
+
+        $this->assertEquals(
+            $this->container->formatAddress(),
+            "Jesper Jacobsen\nEl Corte Inglés"
+        );
+
         $this->container->setAttribute('STREET_ADDRESS', 'Gran Via De Jaume X, 123');
 
         $this->assertEquals(
-            "Jesper Jacobsen\nGran Via De Jaume X, 123\n17001 Girona",
-            $this->container->formatAddress()
+            $this->container->formatAddress(),
+            "Jesper Jacobsen\nEl Corte Inglés\nGran Via De Jaume X, 123"
+        );
+
+        $this->container->setAttribute('POSTAL_CODE', '17001');
+
+        $this->assertEquals(
+            $this->container->formatAddress(),
+            "Jesper Jacobsen\nEl Corte Inglés\nGran Via De Jaume X, 123\n17001"
+        );
+
+        $this->container->setAttribute('LOCALITY', 'Girona');
+
+        $this->assertEquals(
+            $this->container->formatAddress(),
+            "Jesper Jacobsen\nEl Corte Inglés\nGran Via De Jaume X, 123\n17001 Girona"
         );
     }
 
